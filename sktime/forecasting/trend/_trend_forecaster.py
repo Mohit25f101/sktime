@@ -64,7 +64,6 @@ class TrendForecaster(BaseForecaster):
         "capability:sample_weight": True,
         "capability:exogenous": False,
         "requires-fh-in-fit": False,
-        "capability:sample_weight": True,
         "capability:missing_values": False,
         "y_inner_mtype": "pd.DataFrame",
         # CI and test flags
