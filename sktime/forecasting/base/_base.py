@@ -149,9 +149,9 @@ class BaseForecaster(_PredictProbaMixin, BaseEstimator):
 
         self._converter_store_y = dict()  # storage dictionary for in/output conversion
 
+        self._state = "new"
         super().__init__()
         _check_estimator_deps(self)
-        self._state = "new"
 
     @classmethod
     def _get_clone_plugins(cls):
