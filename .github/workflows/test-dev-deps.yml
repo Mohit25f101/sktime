@@ -29,4 +29,3 @@ jobs:
 
       - name: Run Smoke Test
         run: pytest sktime/tests/test_softdeps.py
-        
