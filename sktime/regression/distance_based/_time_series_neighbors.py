@@ -11,6 +11,7 @@ series distances to be passed, and the sktime time series regressor interface.
 __author__ = ["fkiraly"]
 __all__ = ["KNeighborsTimeSeriesRegressor"]
 
+from sklearn.base import BaseEstimator
 from sklearn.neighbors import KNeighborsRegressor
 
 from sktime.base._panel.knn import _BaseKnnTimeSeriesEstimator
@@ -31,7 +32,9 @@ DISTANCES_SUPPORTED = [
 ]
 
 
-class KNeighborsTimeSeriesRegressor(_BaseKnnTimeSeriesEstimator, BaseRegressor):
+class KNeighborsTimeSeriesRegressor(
+    _BaseKnnTimeSeriesEstimator, BaseRegressor, BaseEstimator
+):
     """K-nearest neighbours Time Series Regressor.
 
     An adapted version of the ``scikit-learn`` ``KNeighborsRegressor``,

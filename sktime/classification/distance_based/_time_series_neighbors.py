@@ -18,13 +18,16 @@ param_names=None)
 __author__ = ["fkiraly", "jasonlines", "TonyBagnall", "chrisholder"]
 __all__ = ["KNeighborsTimeSeriesClassifier"]
 
+from sklearn.base import BaseEstimator
 from sklearn.neighbors import KNeighborsClassifier
 
 from sktime.base._panel.knn import _BaseKnnTimeSeriesEstimator
 from sktime.classification.base import BaseClassifier
 
 
-class KNeighborsTimeSeriesClassifier(_BaseKnnTimeSeriesEstimator, BaseClassifier):
+class KNeighborsTimeSeriesClassifier(
+    _BaseKnnTimeSeriesEstimator, BaseClassifier, BaseEstimator
+):
     """K-nearest neighbours Time Series Classifier.
 
     An adapted version of the ``scikit-learn`` ``KNeighborsClassifier``,

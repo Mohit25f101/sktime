@@ -303,6 +303,12 @@ class TimeSeriesForestClassifier(
         feature_importances_ : pandas Dataframe of shape (series_length, 3)
             The feature importances for each feature type (mean, std, slope).
         """
+        # Safeguard check: if model hasn't been fitted yet, raise AttributeError
+        # Python's dir() function safely ignores AttributeError, preventing issues
+        # when reset() calls dir(self) before estimators_ is populated
+        if not hasattr(self, "estimators_") or not self.estimators_:
+            raise AttributeError("Model is not fitted yet.")
+
         all_importances_per_feature = {
             _feature_type: np.zeros(self.series_length)
             for _feature_type in self._feature_types

@@ -9,12 +9,13 @@ __all__ = ["TimeSeriesSVC"]
 
 from inspect import signature
 
+from sklearn.base import BaseEstimator
 from sklearn.svm import SVC
 
 from sktime.classification.base import BaseClassifier
 
 
-class TimeSeriesSVC(BaseClassifier):
+class TimeSeriesSVC(BaseClassifier, BaseEstimator):
     """Support Vector Classifier, for time series kernels.
 
     An adapted version of the scikit-learn SVC for time series data.
