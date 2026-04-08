@@ -103,7 +103,19 @@ class TrendForecaster(BaseForecaster):
         X_sklearn = _get_X_numpy_int_from_pandas(y.index)
 
         # fit regressor
-        self.regressor_.fit(X_sklearn, y.iloc[:, 0], sample_weight=sample_weight)
+        # Handle sample_weight routing for sklearn pipelines
+        fit_kwargs = {}
+        if sample_weight is not None:
+            # Check if the regressor is a scikit-learn Pipeline
+            if hasattr(self.regressor_, "steps"):
+                # Route sample_weight to the final step in the pipeline
+                last_step_name = self.regressor_.steps[-1][0]
+                fit_kwargs[f"{last_step_name}__sample_weight"] = sample_weight
+            else:
+                # If it's a standard estimator, pass it directly
+                fit_kwargs["sample_weight"] = sample_weight
+
+        self.regressor_.fit(X_sklearn, y.iloc[:, 0], **fit_kwargs)
         return self
 
     def _predict(self, fh=None, X=None):
