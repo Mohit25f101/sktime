@@ -1,36 +1,31 @@
 name: Test with Dev Dependencies
 
 on:
+  push:
+    branches:
+      - feat/dev-deps-test
   workflow_dispatch:
   schedule:
     - cron: "0 0 * * *"
-
-permissions:
-  contents: read
 
 jobs:
   test-dev-deps:
     name: Nightly Dev Check
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          # Forward-compat smoke checks are run against the latest supported runtime.
           python-version: "3.13"
 
-      - name: Install sktime and pre-release core dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e ".[dev]"
-          python -m pip uninstall -y numba || true
-          python -m pip install --pre --upgrade numpy pandas scikit-learn
+      - name: Install sktime & dev deps
+        run: |-
+          pip install -e ".[dev]"
+          pip uninstall -y numba || true
+          pip install --pre --upgrade numpy pandas scikit-learn
           python -c "import numpy, pandas, sklearn; print('numpy', numpy.__version__); print('pandas', pandas.__version__); print('sklearn', sklearn.__version__)"
 
-      - name: Run targeted soft dependency smoke test
+      - name: Run Smoke Test
         run: pytest sktime/tests/test_softdeps.py
-        
