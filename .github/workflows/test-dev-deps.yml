@@ -39,4 +39,3 @@ jobs:
           # upstream breaking changes. A failure means the workflow is working.
           # See: https://github.com/sktime/sktime/pull/9286
           pytest sktime/tests/test_softdeps.py -v
-
