@@ -14,18 +14,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-
       - name: Install sktime & dev deps
-        run: |-
-          pip install -e ".[dev]"
-          pip uninstall -y numba || true
+        run: |
+          pip install .[all_extras,dev]
+          # Uninstall numba to bypass a known dependency conflict
+          # with numpy pre-releases. Reference: PR #9286
+          pip uninstall -y numba
+          # Install true pre-releases to detect upstream breaking changes early
           pip install --pre --upgrade numpy pandas scikit-learn
-          python -c "import numpy, pandas, sklearn; print('numpy', numpy.__version__); print('pandas', pandas.__version__); print('sklearn', sklearn.__version__)"
-
+          python -c "
+          import numpy, pandas, sklearn
+          print('numpy', numpy.__version__)
+          print('pandas', pandas.__version__)
+          print('sklearn', sklearn.__version__)
+          "
       - name: Run Smoke Test
-        run: pytest sktime/tests/test_softdeps.py
+        continue-on-error: true
+        run: |
+          # Failures here are expected and intentional - this workflow monitors
+          # upstream breaking changes. A failure means the workflow is working.
+          # See: https://github.com/sktime/sktime/pull/9286
+          pytest sktime/tests/test_softdeps.py -v
+          
