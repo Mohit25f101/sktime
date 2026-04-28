@@ -20,12 +20,15 @@ jobs:
           python-version: "3.13"
       - name: Install sktime & dev deps
         run: |
-          pip install .[all_extras,dev]
-          # Uninstall numba to bypass a known dependency conflict
-          # with numpy pre-releases. Reference: PR #9286
-          pip uninstall -y numba
-          # Install true pre-releases to detect upstream breaking changes early
-          pip install --pre --upgrade numpy pandas scikit-learn
+          pip install uv
+          uv pip install --system .[all_extras,dev]
+
+      - name: Install pre-release dependencies
+        run: |
+          uv pip install --system --pre --upgrade numpy pandas scikit-learn
+
+      - name: Verify pre-release imports
+        run: |
           python -c "
           import numpy, pandas, sklearn
           print('numpy', numpy.__version__)
